@@ -53,19 +53,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## ☁️ 100% Free Deployment Guide
-
-### Deploy on Vercel (Free Forever):
-1. Push this repository to your GitHub account: `https://github.com/Charanagit/time-capsule-3.0.git`.
-2. Go to [Vercel](https://vercel.com/) and click **"Add New Project"**.
-3. Import your `time-capsule-3.0` repository.
-4. Under **Environment Variables**, add:
-   - `MONGO_URI`: Your MongoDB Atlas connection string (or use the free M0 cluster).
-   - `JWT_SECRET`: Any long secure secret string.
-5. Click **Deploy**! Your site is live with a free `.vercel.app` domain and global CDN.
-
----
-
 ## 💡 Author
 **Charana Pramoad** – Full Stack Developer
 Enjoy preserving your memories for the future! ⏳✨
