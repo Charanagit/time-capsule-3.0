@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getDatabase } from '@/lib/mongodb';
 import { signToken } from '@/lib/auth';
-import { memoryStore, demoUser } from '@/lib/store';
+import { memoryStore, adminUser, demoUser } from '@/lib/store';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,36 +17,72 @@ export async function POST(req: NextRequest) {
 
     let authenticated = false;
     let userId = '';
+    let role: 'admin' | 'user' = 'user';
+    let displayName = username;
+    let avatar = '/profile-8.jpg';
 
-    const db = await getDatabase();
-    if (db) {
-      try {
-        const user = await db.collection('users').findOne({ username });
-        if (user && user.password) {
-          const valid = await bcrypt.compare(password, user.password);
-          if (valid) {
-            authenticated = true;
-            userId = user._id.toString();
+    // 1. Check Hardcoded Admin User
+    if (
+      username.toLowerCase() === 'admin' &&
+      (password === 'admin123' || password === 'admin' || password === 'Admin@123')
+    ) {
+      authenticated = true;
+      userId = adminUser.id;
+      role = 'admin';
+      displayName = adminUser.name || 'System Administrator';
+      avatar = adminUser.avatar || '/profile-1.jpg';
+    }
+
+    // 2. Check Hardcoded Demo User
+    if (
+      !authenticated &&
+      username.toLowerCase() === 'demo' &&
+      (password === 'demo123' || password === 'demo')
+    ) {
+      authenticated = true;
+      userId = demoUser.id;
+      role = 'user';
+      displayName = demoUser.name || 'Charana Pramoad';
+      avatar = demoUser.avatar || '/profile-8.jpg';
+    }
+
+    // 3. Check MongoDB Database
+    if (!authenticated) {
+      const db = await getDatabase();
+      if (db) {
+        try {
+          const user = await db.collection('users').findOne({
+            $or: [{ username: username }, { email: username }],
+          });
+          if (user && user.password) {
+            const valid = await bcrypt.compare(password, user.password);
+            if (valid) {
+              authenticated = true;
+              userId = user._id.toString();
+              role = user.role === 'admin' ? 'admin' : 'user';
+              displayName = user.name || user.username;
+              avatar = user.avatar || '/profile-8.jpg';
+            }
           }
+        } catch (err) {
+          console.warn('DB lookup error:', err);
         }
-      } catch (err) {
-        console.warn('DB findOne failed, checking demo store:', err);
       }
     }
 
-    // Demo account fallback if DB didn't match or failed
+    // 4. Check Memory Store for newly registered users (offline/fallback mode)
     if (!authenticated) {
-      if (username === 'demo' && (password === 'demo123' || password === 'demo')) {
-        authenticated = true;
-        userId = demoUser.id;
-      } else {
-        const memUser = memoryStore.users.find((u) => u.username === username);
-        if (memUser && memUser.passwordHash) {
-          const valid = await bcrypt.compare(password, memUser.passwordHash);
-          if (valid) {
-            authenticated = true;
-            userId = memUser.id;
-          }
+      const memUser = memoryStore.users.find(
+        (u) => u.username.toLowerCase() === username.toLowerCase() || u.email?.toLowerCase() === username.toLowerCase()
+      );
+      if (memUser && memUser.passwordHash) {
+        const valid = await bcrypt.compare(password, memUser.passwordHash);
+        if (valid) {
+          authenticated = true;
+          userId = memUser.id;
+          role = memUser.role === 'admin' ? 'admin' : 'user';
+          displayName = memUser.name || memUser.username;
+          avatar = memUser.avatar || '/profile-8.jpg';
         }
       }
     }
@@ -58,10 +94,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const token = signToken({ userId, username });
+    const token = signToken({ userId, username, role });
     const response = NextResponse.json({
       success: true,
-      user: { username, userId },
+      user: { username, userId, role, name: displayName, avatar },
       message: 'Login successful',
     });
 

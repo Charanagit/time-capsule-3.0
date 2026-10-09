@@ -9,6 +9,7 @@ interface SidebarProps {
     username: string;
     name?: string;
     avatar?: string;
+    role?: 'admin' | 'user';
   } | null;
   onOpenThemeModal?: () => void;
   onOpenCreatePostModal?: () => void;
@@ -30,37 +31,54 @@ export default function Sidebar({
   return (
     <div style={{ position: 'sticky', top: '5.4rem', height: 'max-content' }}>
       {/* Profile Card */}
-      <div
+      <Link
+        href="/settings"
         style={{
-          padding: '1rem',
-          background: 'var(--color-white)',
-          borderRadius: 'var(--card-border-radius)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
+          textDecoration: 'none',
+          display: 'block',
           marginBottom: '1rem',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
         }}
       >
-        <div className="profile-picture">
-          <img
-            src={user?.avatar || '/profile-8.jpg'}
-            alt="Profile"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
-            }}
-          />
+        <div
+          style={{
+            padding: '1rem',
+            background: 'var(--color-white)',
+            borderRadius: 'var(--card-border-radius)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+            transition: 'transform 0.2s',
+          }}
+        >
+          <div className="profile-picture">
+            <img
+              src={user?.avatar || '/profile-8.jpg'}
+              alt="Profile"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
+              }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <h4 style={{ color: 'var(--color-dark)', fontWeight: 600, fontSize: '0.95rem' }}>
+                {user?.name || user?.username || 'Charana'}
+              </h4>
+              {user?.role === 'admin' && (
+                <span style={{ fontSize: '0.65rem', background: '#fee2e2', color: '#dc2626', padding: '1px 5px', borderRadius: '8px', fontWeight: 700 }}>
+                  ADMIN
+                </span>
+              )}
+            </div>
+            <p style={{ color: 'var(--color-gray)', fontSize: '0.8rem' }}>
+              @{user?.username || 'Charana_Bandara'}
+            </p>
+          </div>
+          <i className="fa-solid fa-chevron-right" style={{ color: 'var(--color-gray)', fontSize: '0.8rem' }}></i>
         </div>
-        <div>
-          <h4 style={{ color: 'var(--color-dark)', fontWeight: 600, fontSize: '0.95rem' }}>
-            {user?.name || user?.username || 'Charana'}
-          </h4>
-          <p style={{ color: 'var(--color-gray)', fontSize: '0.8rem' }}>
-            @{user?.username || 'Charana_Bandara'}
-          </p>
-        </div>
-      </div>
+      </Link>
 
       {/* Sidebar Navigation */}
       <div
@@ -76,7 +94,7 @@ export default function Sidebar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            height: '3.8rem',
+            height: '3.6rem',
             cursor: 'pointer',
             transition: 'all 200ms ease',
             position: 'relative',
@@ -87,8 +105,8 @@ export default function Sidebar({
             gap: '1.2rem',
           }}
         >
-          <i className="fa-solid fa-house" style={{ fontSize: '1.2rem' }}></i>
-          <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Home</span>
+          <i className="fa-solid fa-house" style={{ fontSize: '1.15rem' }}></i>
+          <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Home Feed</span>
         </Link>
 
         <Link
@@ -96,7 +114,7 @@ export default function Sidebar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            height: '3.8rem',
+            height: '3.6rem',
             cursor: 'pointer',
             transition: 'all 200ms ease',
             position: 'relative',
@@ -107,7 +125,7 @@ export default function Sidebar({
             gap: '1.2rem',
           }}
         >
-          <i className="fa-solid fa-box-archive" style={{ fontSize: '1.2rem' }}></i>
+          <i className="fa-solid fa-box-archive" style={{ fontSize: '1.15rem' }}></i>
           <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Capsule Vault</span>
         </Link>
 
@@ -121,7 +139,7 @@ export default function Sidebar({
             style={{
               display: 'flex',
               alignItems: 'center',
-              height: '3.8rem',
+              height: '3.6rem',
               cursor: 'pointer',
               transition: 'all 200ms ease',
               color: showNotifications ? 'var(--color-primary)' : 'var(--color-dark)',
@@ -131,7 +149,7 @@ export default function Sidebar({
             }}
           >
             <div style={{ position: 'relative' }}>
-              <i className="fa-solid fa-bell" style={{ fontSize: '1.2rem' }}></i>
+              <i className="fa-solid fa-bell" style={{ fontSize: '1.15rem' }}></i>
               {notificationCount > 0 && (
                 <span
                   style={{
@@ -219,7 +237,7 @@ export default function Sidebar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            height: '3.8rem',
+            height: '3.6rem',
             cursor: 'pointer',
             transition: 'all 200ms ease',
             position: 'relative',
@@ -230,8 +248,29 @@ export default function Sidebar({
             gap: '1.2rem',
           }}
         >
-          <i className="fa-solid fa-square-plus" style={{ fontSize: '1.2rem' }}></i>
+          <i className="fa-solid fa-square-plus" style={{ fontSize: '1.15rem' }}></i>
           <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Create Post</span>
+        </Link>
+
+        {/* Settings Button */}
+        <Link
+          href="/settings"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            height: '3.6rem',
+            cursor: 'pointer',
+            transition: 'all 200ms ease',
+            position: 'relative',
+            textDecoration: 'none',
+            color: pathname === '/settings' ? 'var(--color-primary)' : 'var(--color-dark)',
+            background: pathname === '/settings' ? 'var(--color-light)' : 'transparent',
+            paddingLeft: '1.5rem',
+            gap: '1.2rem',
+          }}
+        >
+          <i className="fa-solid fa-gear" style={{ fontSize: '1.15rem' }}></i>
+          <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Settings</span>
         </Link>
 
         {/* Theme Customizer Trigger */}
@@ -240,7 +279,7 @@ export default function Sidebar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            height: '3.8rem',
+            height: '3.6rem',
             cursor: 'pointer',
             transition: 'all 200ms ease',
             color: 'var(--color-dark)',
@@ -248,7 +287,7 @@ export default function Sidebar({
             gap: '1.2rem',
           }}
         >
-          <i className="fa-solid fa-palette" style={{ fontSize: '1.2rem', color: 'var(--color-primary)' }}></i>
+          <i className="fa-solid fa-palette" style={{ fontSize: '1.15rem', color: 'var(--color-primary)' }}></i>
           <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>Theme</span>
         </div>
       </div>

@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'timecapsule-super-secret-key-3.0';
 export interface TokenPayload {
   userId: string;
   username: string;
+  role?: 'admin' | 'user';
 }
 
 export function signToken(payload: TokenPayload): string {

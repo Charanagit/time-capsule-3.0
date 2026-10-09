@@ -5,6 +5,11 @@ export interface User {
   passwordHash?: string;
   avatar?: string;
   name?: string;
+  bio?: string;
+  role?: 'admin' | 'user';
+  isPrivate?: boolean;
+  twoFactorEnabled?: boolean;
+  quietMode?: boolean;
 }
 
 export interface Post {
@@ -32,17 +37,41 @@ export interface Capsule {
   isUnlocked?: boolean;
 }
 
-// In-memory fallback state
+// Hardcoded Admin User
+export const adminUser: User = {
+  id: 'user-admin-root',
+  username: 'admin',
+  email: 'admin@timecapsule.com',
+  name: 'System Administrator',
+  avatar: '/profile-1.jpg',
+  bio: 'Time Capsule 3.0 Platform Super Administrator',
+  role: 'admin',
+  isPrivate: false,
+  twoFactorEnabled: true,
+  quietMode: false,
+};
+
+// Hardcoded Demo User
 export const demoUser: User = {
   id: 'user-demo-1',
   username: 'demo',
   email: 'demo@timecapsule.com',
   name: 'Charana Pramoad',
   avatar: '/profile-8.jpg',
+  bio: 'Preserving precious memories and digital time capsules ⏳✨',
+  role: 'user',
+  isPrivate: false,
+  twoFactorEnabled: false,
+  quietMode: false,
 };
 
 export const memoryStore = {
   users: [
+    {
+      ...adminUser,
+      // admin123 bcrypt hash
+      passwordHash: '$2a$10$6Rsm5B7H6YnB5s6rY.k0z.tA6cEvH5sR2y4z.56s7t8u9v0w1x2y3',
+    },
     {
       ...demoUser,
       // demo123 bcrypt hash
@@ -64,7 +93,7 @@ export const memoryStore = {
     },
     {
       id: 'post-2',
-      username: 'Charana',
+      username: 'Charana Pramoad',
       title: 'Time Capsule 3.0 Launch',
       content: 'Welcome to Time Capsule 3.0! Storing digital memories, scheduling future revelations, and keeping moments safe forever. ⏳✨',
       visibility: 'public',
@@ -72,6 +101,17 @@ export const memoryStore = {
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
       likes: 342,
       comments: 45,
+    },
+    {
+      id: 'post-3',
+      username: 'Ernest Achiever',
+      title: 'Coding the Future',
+      content: 'Just sealed a capsule to be opened when our startup turns 5 years old. What a journey so far! 💻🚀',
+      visibility: 'friends',
+      image: '/feed-3.jpg',
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
+      likes: 89,
+      comments: 12,
     },
   ] as Post[],
 
@@ -95,6 +135,17 @@ export const memoryStore = {
       visibility: 'friends',
       imageUrl: '/feed-4.jpg',
       createdAt: new Date().toISOString(),
+    },
+    {
+      id: 'capsule-3',
+      username: 'admin',
+      caption: 'System Genesis Capsule (Admin)',
+      message: 'Time Capsule 3.0 platform deployed with administrative controls and verified database vaulting.',
+      scheduleDate: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // Already unlocked!
+      visibility: 'public',
+      imageUrl: '/feed-5.jpg',
+      createdAt: new Date().toISOString(),
+      isUnlocked: true,
     },
   ] as Capsule[],
 };

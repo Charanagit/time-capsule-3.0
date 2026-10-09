@@ -37,6 +37,32 @@ export default function LoginPage() {
     }
   };
 
+  const handleAdminLogin = async () => {
+    setUsername('admin');
+    setPassword('admin123');
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: 'admin123' }),
+      });
+
+      if (res.ok) {
+        router.push('/');
+        router.refresh();
+      } else {
+        setError('Admin login failed');
+      }
+    } catch {
+      setError('Connection error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDemoLogin = async () => {
     setUsername('demo');
     setPassword('demo123');
@@ -65,14 +91,14 @@ export default function LoginPage() {
 
   return (
     <div className="glass-page">
-      <div className="glass-container">
+      <div className="glass-container" style={{ maxWidth: '420px' }}>
         <form className="glass-form" onSubmit={handleSubmit}>
-          <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '0.3rem' }}>
             <span style={{ fontSize: '2.5rem' }}>⏳</span>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0.2rem 0', color: '#fff' }}>
               Time<span style={{ color: 'var(--color-secondary)' }}>Caps</span> 3.0
             </h2>
-            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)' }}>
+            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)' }}>
               Sign in to your digital memory vault
             </p>
           </div>
@@ -94,13 +120,13 @@ export default function LoginPage() {
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: 500 }}>Username</label>
+            <label style={{ fontSize: '0.85rem', fontWeight: 500 }}>Username or Email</label>
             <input
               type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Enter your username or email"
               className="glass-input"
             />
           </div>
@@ -117,23 +143,36 @@ export default function LoginPage() {
             />
           </div>
 
-          <button type="submit" disabled={loading} className="glass-btn" style={{ marginTop: '0.5rem' }}>
-            {loading ? 'Signing in...' : 'Login'}
+          <button type="submit" disabled={loading} className="glass-btn" style={{ marginTop: '0.3rem' }}>
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
 
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            disabled={loading}
-            className="glass-btn-secondary"
-          >
-            ⚡ Explore with Demo Account (No DB needed)
-          </button>
+          {/* Quick preset logins */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.2rem' }}>
+            <button
+              type="button"
+              onClick={handleAdminLogin}
+              disabled={loading}
+              className="glass-btn-secondary"
+              style={{ background: 'rgba(239, 68, 68, 0.25)', borderColor: 'rgba(239, 68, 68, 0.5)' }}
+            >
+              🛡️ Admin Login (admin / admin123)
+            </button>
 
-          <div style={{ textAlign: 'center', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={loading}
+              className="glass-btn-secondary"
+            >
+              ⚡ Demo User (demo / demo123)
+            </button>
+          </div>
+
+          <div style={{ textAlign: 'center', fontSize: '0.85rem', marginTop: '0.4rem' }}>
             Don&apos;t have an account?{' '}
             <Link href="/signup" style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline' }}>
-              Register
+              Create New Account
             </Link>
           </div>
         </form>

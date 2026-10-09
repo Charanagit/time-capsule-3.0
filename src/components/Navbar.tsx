@@ -9,6 +9,7 @@ interface NavbarProps {
     username: string;
     name?: string;
     avatar?: string;
+    role?: 'admin' | 'user';
   } | null;
   onOpenThemeModal?: () => void;
 }
@@ -126,7 +127,7 @@ export default function Navbar({ user, onOpenThemeModal }: NavbarProps) {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               style={{
                 cursor: 'pointer',
-                border: '2px solid var(--color-primary)',
+                border: user?.role === 'admin' ? '2.5px solid var(--color-danger)' : '2.5px solid var(--color-primary)',
                 transition: 'transform 0.2s'
               }}
             >
@@ -150,7 +151,7 @@ export default function Navbar({ user, onOpenThemeModal }: NavbarProps) {
                   borderRadius: 'var(--card-border-radius)',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                   padding: '1rem',
-                  minWidth: '200px',
+                  minWidth: '220px',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.6rem',
@@ -158,9 +159,34 @@ export default function Navbar({ user, onOpenThemeModal }: NavbarProps) {
                 }}
               >
                 <div style={{ borderBottom: '1px solid var(--color-light)', paddingBottom: '0.5rem' }}>
-                  <p style={{ fontWeight: 600, color: 'var(--color-dark)' }}>{user?.name || user?.username || 'User'}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <p style={{ fontWeight: 600, color: 'var(--color-dark)' }}>{user?.name || user?.username || 'User'}</p>
+                    {user?.role === 'admin' && (
+                      <span style={{ fontSize: '0.65rem', background: '#fee2e2', color: '#dc2626', padding: '1px 6px', borderRadius: '8px', fontWeight: 700 }}>
+                        ADMIN
+                      </span>
+                    )}
+                  </div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--color-gray)' }}>@{user?.username || 'demo'}</p>
                 </div>
+
+                <Link
+                  href="/settings"
+                  onClick={() => setDropdownOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.8rem',
+                    color: 'var(--color-dark)',
+                    textDecoration: 'none',
+                    padding: '0.4rem 0',
+                    fontSize: '0.9rem',
+                    fontWeight: 500,
+                  }}
+                >
+                  <i className="fa-solid fa-gear" style={{ color: 'var(--color-primary)' }}></i>
+                  <span>Settings & Privacy</span>
+                </Link>
 
                 <button
                   onClick={() => {
@@ -196,7 +222,10 @@ export default function Navbar({ user, onOpenThemeModal }: NavbarProps) {
                     cursor: 'pointer',
                     padding: '0.4rem 0',
                     textAlign: 'left',
-                    fontSize: '0.9rem'
+                    fontSize: '0.9rem',
+                    borderTop: '1px solid var(--color-light)',
+                    marginTop: '0.2rem',
+                    paddingTop: '0.6rem'
                   }}
                 >
                   <i className="fa-solid fa-arrow-right-from-bracket"></i>
