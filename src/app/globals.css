@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --Hue: 252;
+  --white-color-lightness: 100%;
+  --light-color-lightness: 95%;
+  --dark-color-lightness: 17%;
+  --sticky-top-left: 5.4rem;
+  --sticky-top-right: -18rem;
+
+  --color-white: hsl(252, 30%, var(--white-color-lightness));
+  --color-light: hsl(252, 30%, var(--light-color-lightness));
+  --color-gray: hsl(252, 15%, 65%);
+  --color-primary: hsl(var(--Hue), 75%, 60%);
+  --color-secondary: hsl(252, 100%, 90%);
+  --color-success: hsl(120, 95%, 65%);
+  --color-danger: hsl(0, 95%, 65%);
+  --color-dark: hsl(252, 30%, var(--dark-color-lightness));
+  --color-black: hsl(252, 30%, 10%);
+
+  --border-radius: 2rem;
+  --card-border-radius: 1rem;
+  --btn-padding: 0.6rem 2rem;
+  --search-padding: 0.6rem 1rem;
+  --card-padding: 1rem;
+}
+
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--color-dark);
+  background-color: var(--color-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Container */
+.app-container {
+  width: 85%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Glassmorphism Styles for Auth */
+.glass-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/loginbg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: 20px;
+}
+
+.glass-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  padding: 35px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.glass-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.glass-input {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.glass-btn {
+  background-color: #fff;
+  color: #1a1a2e;
+  border: none;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.glass-btn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.glass-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Custom UI Components */
+.profile-picture {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-size: 0.9rem;
+  border: none;
+  text-decoration: none;
+  gap: 0.5rem;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Background Theme classes */
+body.bg-theme-1 {
+  --white-color-lightness: 100%;
+  --light-color-lightness: 95%;
+  --dark-color-lightness: 17%;
+}
+
+body.bg-theme-2 {
+  --white-color-lightness: 20%;
+  --light-color-lightness: 15%;
+  --dark-color-lightness: 95%;
+}
+
+body.bg-theme-3 {
+  --white-color-lightness: 10%;
+  --light-color-lightness: 0%;
+  --dark-color-lightness: 95%;
+}
